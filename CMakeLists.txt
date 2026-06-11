@@ -8,35 +8,32 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(vita3g-disable)
-include("${VITASDK}/share/vita.cmake" REQUIRED)
+project(vita3g-disable C)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -O3 -std=gnu99")
-
-include_directories()
-
-link_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
-if (NOT ${RELEASE})
-  add_definitions(-DENABLE_LOGGING)
-endif()
+include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 add_executable(${PROJECT_NAME}
-  main.c
+        main.c
+)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+        -Wall
+        -Wextra
+        -O3
+        -std=gnu99
+)
+
+target_link_options(${PROJECT_NAME} PRIVATE
+        -nostdlib
+        -Wl,-q
+        -Wl,-e,module_start
 )
 
 target_link_libraries(${PROJECT_NAME}
-  taihen_stub
-  SceLibKernel_stub
-  SceIofilemgr_stub
-)
-
-set_target_properties(${PROJECT_NAME}
-  PROPERTIES LINK_FLAGS "-nostdlib"
+        taihen_stub
+        SceLibKernel_stub
 )
 
 vita_create_self(${PROJECT_NAME}.suprx ${PROJECT_NAME}
-  CONFIG ${CMAKE_SOURCE_DIR}/exports.yml
+        CONFIG ${CMAKE_SOURCE_DIR}/exports.yml
 )
