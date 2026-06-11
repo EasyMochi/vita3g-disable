@@ -1,4 +1,7 @@
+cmake-build-debug-wsl
 build
+
+.idea
 .vs
 .vscode
 
