@@ -19,14 +19,18 @@ add_executable(${PROJECT_NAME}
 target_compile_options(${PROJECT_NAME} PRIVATE
         -Wall
         -Wextra
-        -O3
+        -Os
         -std=gnu99
+        -ffunction-sections
+        -fdata-sections
 )
 
 target_link_options(${PROJECT_NAME} PRIVATE
         -nostdlib
         -Wl,-q
         -Wl,-e,module_start
+        -Wl,-u,module_stop
+        -Wl,--gc-sections
 )
 
 target_link_libraries(${PROJECT_NAME}
